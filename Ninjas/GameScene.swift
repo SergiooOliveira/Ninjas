@@ -48,6 +48,29 @@ class GameScene: SKScene {
         let projectile = SKSpriteNode(imageNamed: "projectile")
         projectile.position = CGPoint(x: player.position.x + projectile.size.width + 0.2, y: player.position.y)
         
+        let offset = location - player.position
+        if offset.x < 0 { return }
+        
+        addChild(projectile)
+        
+        let direction = offset.normalize()
+        let amount = direction * 1000
+        let finalDestination = amount + projectile.position
+        let move = SKAction.move(to: finalDestination, duration: 2.0)
+        projectile.run(SKAction.sequence([move, SKAction.removeFromParent()]))
+    }
+    
+    /*
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touchlocation = touches.first else { return }
+        let location = touchlocation.location(in: self)
+        
+        let projectile = SKSpriteNode(imageNamed: "projectile")
+        projectile.position = CGPoint(x: player.position.x + projectile.size.width + 0.2, y: player.position.y)
+        
+        let offset = location - player.position
+        if offset.x < 0 { return }
+        
         addChild(projectile)
         
         let dx = location.x - projectile.position.x
@@ -62,9 +85,8 @@ class GameScene: SKScene {
             y: projectile.position.y + sin(angle) * distance
         )
         
-        // sqrt(x^2, y^2
-        
         let move = SKAction.move(to: destination, duration: 2)
         projectile.run(SKAction.sequence([move, SKAction.removeFromParent()]))
     }
+    */
 }
