@@ -39,10 +39,32 @@ class GameScene: SKScene {
         
         let move = SKAction.move(to: CGPoint(x: -monster.size.width, y: y), duration: 2)
         monster.run(SKAction.sequence([move, SKAction.removeFromParent()]))
-        
     }
     
-    func moveMonster() {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touchlocation = touches.first else { return }
+        let location = touchlocation.location(in: self)
         
+        let projectile = SKSpriteNode(imageNamed: "projectile")
+        projectile.position = CGPoint(x: player.position.x + projectile.size.width + 0.2, y: player.position.y)
+        
+        addChild(projectile)
+        
+        let dx = location.x - projectile.position.x
+        let dy = location.y - projectile.position.y
+        
+        let angle = atan2(dy, dx)
+        
+        let distance: CGFloat = size.width * 0.5
+        
+        let destination = CGPoint(
+            x: projectile.position.x + cos(angle) * distance,
+            y: projectile.position.y + sin(angle) * distance
+        )
+        
+        // sqrt(x^2, y^2
+        
+        let move = SKAction.move(to: destination, duration: 2)
+        projectile.run(SKAction.sequence([move, SKAction.removeFromParent()]))
     }
 }
